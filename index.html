@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>WOLF LABS | Main Series: Resume Skills A2</title>
+    <!-- Premium Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- WOLF LABS SUPREME ENGINE (CAREER EDITION) --- */
+        :root {
+            --bg-base: #0f172a; 
+            --brand-main: #3b82f6; 
+            --accent: #f59e0b; 
+            --accent-glow: rgba(59, 130, 246, 0.5);
+            --correct: #10b981; 
+            --incorrect: #ef4444; 
+            --text-main: #f8fafc;
+            --text-dim: #cbd5e1;
+            --glass-bg: rgba(15, 23, 42, 0.85); 
+            --glass-border: rgba(255, 255, 255, 0.1); 
+            --font-display: 'Montserrat', sans-serif;
+            --font-body: 'Outfit', sans-serif;
+            --font-code: 'Fira Code', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        button, input, select, textarea { font-family: var(--font-body); outline: none; }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            overflow: hidden;
+            height: 100vh; width: 100vw;
+            display: flex; flex-direction: column;
+            position: fixed; 
+            perspective: 1000px;
+        }
+
+        /* CORRECTION MODE */
+        .correction-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 9998; box-shadow: inset 0 0 0 rgba(239, 68, 68, 0); transition: box-shadow 0.4s ease; }
+        body.correction-mode .correction-overlay { box-shadow: inset 0 0 150px 20px rgba(239, 68, 68, 0.6); }
+
+        /* BACKGROUNDS */
+        .ambient-orbs { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; }
+        .bg-image {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?q=80&w=2000&auto=format&fit=crop');
+            background-size: cover; background-position: center; opacity: 0.15; filter: grayscale(30%) brightness(0.5);
+        }
+        .bg-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, rgba(15,23,42,0.95) 100%); z-index: 2;
+        }
+        .orb { position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.2; z-index: 3; }
+        .orb-1 { width: 60vw; height: 60vw; background: var(--brand-main); top: -20%; left: -20%; }
+        .orb-2 { width: 50vw; height: 50vw; background: var(--accent); bottom: -10%; right: -10%; }
+
+        /* NAVBAR */
+        .navbar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 30px; height: 75px; background: rgba(15,23,42,0.8); backdrop-filter: blur(30px);
+            position: fixed; top: 20px; left: 2%; width: 96%; z-index: 100;
+            border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .logo { color: #fff; font-family: var(--font-display); font-size: 1.2rem; font-weight: 900; letter-spacing: 1px; display: flex; align-items: center; gap: 10px;}
+        .logo i { color: var(--brand-main); }
+        .logo span { background: var(--brand-main); color: #fff; padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 800; }
+        .nav-controls { display: flex; gap: 10px; align-items: center;}
+        .teacher-tool {
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.1);
+            color: #cbd5e1; width: 40px; height: 40px; border-radius: 12px; cursor: pointer;
+            font-size: 1rem; transition: 0.3s; display: flex; align-items: center; justify-content: center;
+        }
+        .teacher-tool:hover { background: rgba(255,255,255,0.1); color: #fff; }
+        .teacher-tool.active-tool { background: var(--brand-main); color: #fff; border-color: var(--brand-main); box-shadow: 0 0 15px var(--accent-glow); }
+
+        /* MAIN CONTAINER & SLIDES */
+        .main-container { flex: 1; position: relative; z-index: 10; padding: 110px 5% 100px 5%; display: flex; align-items: center; justify-content: center; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);}
+        .slide { height: 100%; width: 100%; max-width: 1100px; display: none; flex-direction: column; justify-content: center; align-items: center; opacity: 0; transform: translateY(20px); transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+        .slide.active { display: flex; opacity: 1; transform: translateY(0); }
+
+        .glass-panel {
+            background: var(--glass-bg); backdrop-filter: blur(40px);
+            border: 1px solid var(--glass-border); border-top: 3px solid var(--brand-main);
+            padding: 50px 60px; border-radius: 30px; width: 100%; max-height: 82vh; 
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8), inset 0 20px 50px rgba(255,255,255,0.02);
+            display: flex; flex-direction: column; justify-content: flex-start; align-items: center;
+            position: relative; overflow-y: auto; scrollbar-width: none;
+        }
+        .glass-panel::-webkit-scrollbar { display: none; }
+        .glass-panel > * { flex-shrink: 0; }
+
+        /* TYPOGRAPHY */
+        h1 { font-family: var(--font-display); font-size: 4.5rem; color: #fff; line-height: 1; margin-bottom: 20px; text-align: center; letter-spacing: -2px; }
+        h2 { font-family: var(--font-display); font-size: 2.2rem; color: var(--brand-main); margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 15px; text-transform: uppercase;}
+        p { font-size: 1.3rem; color: var(--text-dim); line-height: 1.6; text-align: center; margin-bottom: 25px;}
+
+        /* BUTTONS & INPUTS */
+        .btn-start { 
+            padding: 20px 45px; border: none; border-radius: 15px; font-weight: 800; font-size: 1.2rem; text-transform: uppercase; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 12px; background: var(--brand-main); color: #fff; box-shadow: 0 10px 30px var(--accent-glow);
+        }
+        .btn-start:hover { transform: translateY(-5px); filter: brightness(1.1); box-shadow: 0 15px 40px rgba(59, 130, 246, 0.6); }
+
+        /* VIDEO WRAPPER */
+        .video-wrapper { position: relative; width: 100%; max-width: 850px; aspect-ratio: 16/9; background: #000; border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 40px rgba(0,0,0,0.8); margin-bottom: 25px; z-index: 50; }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; pointer-events: auto !important; z-index: 60; }
+        
+        /* SPEAKING HUB & STARTERS */
+        .speaking-hub { margin-top: 30px; padding: 30px; background: rgba(0,0,0,0.5); border-radius: 20px; border-left: 5px solid var(--accent); text-align: left; width: 100%; display: none; animation: popIn 0.5s ease;}
+        
+        .starter-reveal-btn {
+            background: rgba(59, 130, 246, 0.1); border: 1px dashed var(--brand-main); color: var(--brand-main);
+            padding: 12px 24px; border-radius: 50px; cursor: pointer; transition: 0.3s; font-family: var(--font-code);
+            display: inline-flex; align-items: center; gap: 10px; margin-top: 15px; font-weight: 700; font-size: 1rem;
+        }
+        .starter-reveal-btn:hover { background: var(--brand-main); color: #fff; box-shadow: 0 0 20px var(--accent-glow); }
+        .starter-content {
+            display: none; margin-top: 15px; padding: 20px; background: rgba(0, 0, 0, 0.5); 
+            border-left: 4px solid var(--brand-main); border-radius: 12px; animation: popIn 0.4s ease-out forwards;
+        }
+        .starter-content.active { display: flex; flex-direction: column; gap: 8px; }
+        .starter-title { font-size: 0.8rem; color: var(--brand-main); font-family: var(--font-display); text-transform: uppercase; letter-spacing: 1px; font-weight: 900; margin-bottom: 5px; }
+        .starter-phrase { font-family: var(--font-code); font-size: 1.4rem; color: #fff; font-weight: bold;}
+        
+        @keyframes popIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- THEMATIC GAMES CSS --- */
+        .ww-grid { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 20px;}
+        .ww-box { width: 160px; height: 160px; background: #1e293b; border-radius: 20px; border: 2px solid var(--glass-border); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
+        .ww-box:hover { border-color: var(--brand-main); transform: translateY(-10px); background: #283548; box-shadow: 0 10px 20px var(--accent-glow);}
+        .ww-box i { font-size: 3rem; color: var(--brand-main); margin-bottom: 10px; }
+        .ww-box.opened { opacity: 0.2; pointer-events: none; }
+        
+        /* Grammar Sandbox */
+        .grammar-switch { display: flex; justify-content: center; gap: 20px; margin-bottom: 25px; flex-wrap: wrap; width: 100%; max-width: 900px; margin-inline: auto;}
+        .switch-btn { background: rgba(0,0,0,0.5); border: 2px solid rgba(255,255,255,0.2); color: white; padding: 15px 40px; border-radius: 50px; font-size: 1.2rem; font-weight: 800; cursor: pointer; transition: 0.3s; font-family: var(--font-code); box-shadow: 0 8px 20px rgba(0,0,0,0.3);}
+        .switch-btn.active { background: var(--brand-main); color: #fff; border-color: var(--brand-main); box-shadow: 0 0 30px var(--accent-glow); transform: scale(1.05);}
+        .sandbox-display { background: rgba(0,0,0,0.5); padding: 50px; border-radius: 24px; border-left: 6px solid var(--brand-main); min-height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: inset 0 0 30px rgba(0,0,0,0.6); text-align: center; width: 100%; max-width: 900px; margin-inline: auto;}
+
+        /* Skill Sorter */
+        .scale-container { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; max-width: 800px; margin: 0 auto;}
+        .scale-display { background: #000; border: 4px solid #334155; border-radius: 15px; width: 100%; max-width: 500px; padding: 20px; font-family: var(--font-code); font-size: 2.5rem; font-weight: 900; color: var(--brand-main); text-align: center; box-shadow: inset 0 0 20px rgba(59, 130, 246, 0.2); text-transform: uppercase; letter-spacing: 2px; min-height: 100px; display: flex; align-items: center; justify-content: center;}
+        .scale-controls { display: flex; gap: 20px; width: 100%; justify-content: center;}
+        .scale-btn { padding: 20px 40px; font-size: 1.8rem; font-family: var(--font-display); font-weight: 900; border-radius: 20px; border: 4px solid var(--glass-border); background: #1e293b; color: #fff; cursor: pointer; transition: 0.2s; flex: 1; max-width: 300px;}
+        .scale-btn:hover { background: #334155; transform: translateY(-5px);}
+        .scale-btn:active { transform: scale(0.95); }
+        .scale-baskets { display: flex; gap: 40px; width: 100%; justify-content: center; margin-top: 20px;}
+        .basket { flex: 1; min-height: 150px; border: 3px dashed rgba(255,255,255,0.2); border-radius: 20px; padding: 20px; display: flex; flex-wrap: wrap; gap: 10px; align-content: flex-start; position: relative; background: rgba(0,0,0,0.3);}
+        .basket::before { content: attr(data-label); position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--bg-base); padding: 0 15px; font-family: var(--font-code); font-weight: 800; color: var(--text-dim); font-size: 1.2rem; white-space: nowrap;}
+        .scale-item-chip { background: var(--brand-main); color: #fff; font-family: var(--font-code); font-weight: 700; padding: 8px 15px; border-radius: 8px; font-size: 1.1rem; animation: popIn 0.3s ease-out;}
+
+        /* Strengths Quiz & Soft Skill Superpower Quiz */
+        .quiz-container { width: 100%; max-width: 800px; position: relative; min-height: 350px; margin: 0 auto;}
+        .quiz-step { position: absolute; top:0; left:0; width: 100%; background: rgba(0,0,0,0.5); border: 2px solid var(--glass-border); border-radius: 20px; padding: 40px; text-align: center; display: none; animation: popIn 0.4s ease-out forwards; box-shadow: 0 15px 30px rgba(0,0,0,0.5);}
+        .quiz-step.active { display: block; }
+        .quiz-q { font-size: 1.8rem; color: #fff; font-weight: 700; margin-bottom: 30px; font-family: var(--font-display); line-height: 1.4;}
+        .quiz-options { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+        .quiz-opt { flex: 1; min-width: 250px; padding: 25px; border-radius: 15px; background: #1e293b; border: 2px solid rgba(255,255,255,0.1); color: #fff; font-size: 1.2rem; cursor: pointer; transition: 0.3s; font-family: var(--font-code); font-weight: 600;}
+        .quiz-opt:hover { background: rgba(59, 130, 246, 0.1); border-color: var(--brand-main); transform: translateY(-5px);}
+        .quiz-result { text-align: center; display: none; animation: popIn 0.6s ease-out forwards; background: rgba(16, 185, 129, 0.1); padding: 50px; border-radius: 20px; border: 2px solid var(--brand-main); box-shadow: 0 0 40px rgba(16,185,129,0.3);}
+
+        /* Syntax Builder */
+        .drop-zone { min-height: 100px; border: 2px dashed rgba(255,255,255,0.2); border-radius: 20px; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px; padding: 20px; margin-bottom: 20px; width: 100%; background: rgba(0,0,0,0.2);}
+        .word-chip { padding: 12px 25px; background: #1e293b; border: 1px solid var(--glass-border); border-radius: 12px; cursor: pointer; font-weight: 600; transition: 0.2s; color: #fff; font-size: 1.2rem;}
+        .word-chip:hover { background: var(--brand-main); color: #fff; border-color: var(--brand-main); transform: translateY(-3px);}
+
+        /* Truth Board */
+        .truth-board { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 20px; margin: 0 auto;}
+        .truth-row { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); padding: 25px 40px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; gap: 30px; transition: 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.2);}
+        .truth-row:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.2); transform: translateY(-3px);}
+        .truth-text { font-size: 1.6rem; font-weight: 500; color: #f8fafc; flex: 1; text-align: left; line-height: 1.4;}
+        .tf-btns { display: flex; gap: 15px; }
+        .tf-btn { width: 120px; height: 55px; border-radius: 14px; border: 2px solid rgba(255,255,255,0.2); background: transparent; color: #fff; font-family: var(--font-display); font-size: 1.2rem; font-weight: 900; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; letter-spacing: 1px;}
+        .tf-btn:hover { background: rgba(255,255,255,0.1); transform: scale(1.05);}
+        .truth-row.solved-true .tf-btn.t-btn { background: var(--correct); border-color: var(--correct); color: #000; box-shadow: 0 0 20px rgba(16,185,129,0.5); transform: scale(1.05);}
+        .truth-row.solved-false .tf-btn.f-btn { background: var(--incorrect); border-color: var(--incorrect); color: #fff; box-shadow: 0 0 20px rgba(239,68,68,0.5); transform: scale(1.05);}
+        .truth-row.solved-true .tf-btn.f-btn, .truth-row.solved-false .tf-btn.t-btn { opacity: 0.3; pointer-events: none; filter: grayscale(100%);}
+
+        /* Memory Match Grid */
+        .memory-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; width: 100%; max-width: 700px; margin: 0 auto 30px; perspective: 1000px;}
+        .mem-card { height: 120px; position: relative; cursor: pointer; transform-style: preserve-3d; transition: transform 0.5s; }
+        .mem-card.flipped { transform: rotateY(180deg); pointer-events: none;}
+        .mem-front, .mem-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-family: var(--font-body); font-weight: 700; font-size: 1.3rem; border: 2px solid rgba(255,255,255,0.1); }
+        .mem-front { background: rgba(30, 41, 59, 0.9); color: var(--brand-main); font-size: 3rem;}
+        .mem-back { background: var(--brand-main); color: #fff; transform: rotateY(180deg); text-align: center; padding: 10px;}
+        .mem-card.matched .mem-back { background: var(--correct); border-color: var(--correct); color: #000; box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);}
+
+        /* Picture Reveal Grid */
+        .reveal-area { width: 100%; max-width: 600px; aspect-ratio: 16/9; margin: 0 auto 30px; position: relative; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.6); background-color: #334155; background-image: url('https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=800&auto=format&fit=crop'); background-size: cover; background-position: center;}
+        .reveal-grid { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); gap: 2px; padding: 2px;}
+        .reveal-tile { background: #1e293b; display: flex; align-items: center; justify-content: center; color: #fff; font-family: var(--font-display); font-size: 2rem; cursor: pointer; transition: opacity 0.4s; }
+        .reveal-tile:hover { background: #334155; }
+
+        /* Odd One Out */
+        .odd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 600px; margin: 0 auto 30px; }
+        .odd-btn { background: rgba(0,0,0,0.5); border: 2px solid rgba(255,255,255,0.1); padding: 30px; font-size: 1.8rem; border-radius: 20px; color: #fff; cursor: pointer; transition: 0.3s; font-family: var(--font-display); font-weight: 700; box-shadow: 0 10px 20px rgba(0,0,0,0.3);}
+        .odd-btn:hover { background: rgba(255,255,255,0.1); border-color: var(--brand-main); transform: translateY(-5px); box-shadow: 0 15px 30px rgba(59,130,246,0.2);}
+        .odd-btn.correct { background: var(--correct); color: #000; border-color: var(--correct); transform: scale(1.05); pointer-events: none; box-shadow: 0 0 30px rgba(16,185,129,0.5);}
+        .odd-btn.wrong { background: var(--incorrect); border-color: var(--incorrect); animation: shake 0.4s; pointer-events: none; }
+        .odd-btn.dimmed { opacity: 0.3; pointer-events: none; }
+
+        /* Slot Machine */
+        .slot-machine { width: 100%; max-width: 400px; height: 100px; background: rgba(0,0,0,0.8); border: 4px solid var(--brand-main); border-radius: 20px; margin: 0 auto 30px; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center;}
+        .slot-display { font-family: var(--font-display); font-size: 2.2rem; color: #fff; text-transform: uppercase; font-weight: 900; letter-spacing: 2px; transition: 0.1s; text-align: center;}
+
+        /* Phone UI */
+        .phone-ui { width: 100%; max-width: 400px; height: 600px; background: #0f172a; border: 14px solid #1e293b; border-radius: 45px; position: relative; margin: 0 auto; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.9); }
+        .phone-notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 120px; height: 25px; background: #1e293b; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; z-index: 20; }
+        .phone-top-bar { height: 80px; background: rgba(31, 41, 55, 0.98); display: flex; align-items: flex-end; justify-content: center; padding-bottom: 15px; font-weight: 800; font-size: 1.2rem; z-index: 10; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .phone-chat-area { flex: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; scrollbar-width: none; }
+        .phone-msg { padding: 15px 22px; border-radius: 20px; max-width: 85%; font-size: 1.15rem; line-height: 1.4; animation: popIn 0.3s ease-out forwards; font-weight: 500; text-align: left; box-shadow: 0 5px 15px rgba(0,0,0,0.2);}
+        .phone-msg.received { background: #334155; color: #fff; align-self: flex-start; border-bottom-left-radius: 6px; }
+        .phone-msg.sent { background: var(--brand-main); color: #fff; align-self: flex-end; border-bottom-right-radius: 6px; font-weight: 700; display: none;}
+        .phone-msg.sent.visible { display: block; }
+        .phone-options-area { padding: 25px; background: rgba(15, 23, 42, 0.98); border-top: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 15px; z-index: 10; }
+        .phone-opt-btn { background: rgba(30, 41, 59, 0.8); border: 2px solid rgba(255,255,255,0.1); color: #fff; padding: 18px 25px; border-radius: 16px; font-weight: 600; font-size: 1.1rem; cursor: pointer; transition: all 0.3s; text-align: left; display: block; width: 100%; box-shadow: 0 5px 15px rgba(0,0,0,0.3);}
+        .phone-opt-btn:hover { background: rgba(59, 130, 246, 0.1); border-color: var(--brand-main); color: var(--brand-main); transform: translateY(-2px); }
+        .typing-indicator { display: flex; gap: 6px; padding: 16px 25px; background: #334155; border-radius: 20px; align-self: flex-start; border-bottom-left-radius: 6px; animation: popIn 0.3s ease-out forwards; display: none;}
+        .typing-indicator.visible { display: flex; }
+        .dot { width: 10px; height: 10px; background: #9ca3af; border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; }
+        .dot:nth-child(1) { animation-delay: -0.32s; } .dot:nth-child(2) { animation-delay: -0.16s; }
+
+        /* Would You Rather */
+        .wyr-container { display: flex; gap: 20px; width: 100%; max-width: 900px; margin: 0 auto;}
+        .wyr-card { flex: 1; border-radius: 20px; background: rgba(0,0,0,0.4); border: 2px solid var(--glass-border); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.4s; padding: 40px 20px; text-align: center;}
+        .wyr-card i { font-size: 5rem; margin-bottom: 25px; color: var(--text-dim); transition: 0.3s;}
+        .wyr-card p { font-family: var(--font-display); font-size: 1.5rem; color: #fff; line-height: 1.4; margin: 0;}
+        .wyr-card:hover { transform: scale(1.02); border-color: var(--brand-main); background: rgba(59, 130, 246, 0.05); }
+        .wyr-card:hover i { color: var(--brand-main); }
+        .wyr-card.selected { background: var(--brand-main); transform: scale(1.05); border-color: var(--brand-main); box-shadow: 0 15px 40px var(--accent-glow); pointer-events: none;}
+        .wyr-card.selected i, .wyr-card.selected p { color: #fff; }
+        .wyr-container.locked .wyr-card:not(.selected) { opacity: 0.3; filter: grayscale(100%); pointer-events: none; transform: scale(0.95); }
+
+        /* Agree/Disagree */
+        .agree-container { display: flex; gap: 15px; width: 100%; max-width: 800px; margin: 0 auto; justify-content: center;}
+        .agree-btn { padding: 25px; font-weight: 800; font-size: 1.3rem; font-family: var(--font-display); border-radius: 16px; border: 2px solid; background: rgba(0,0,0,0.6); transition: 0.3s; flex: 1; cursor: pointer; color: #fff;}
+        .agree-btn.disagree { border-color: #ef4444; }
+        .agree-btn.neutral { border-color: #f59e0b; }
+        .agree-btn.agree { border-color: #10b981; }
+        .agree-btn:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .agree-btn:hover.disagree { background: #ef4444; color:#fff;}
+        .agree-btn:hover.neutral { background: #f59e0b; color:#fff;}
+        .agree-btn:hover.agree { background: #10b981; color:#000;}
+        .agree-btn.selected.disagree { background: #ef4444; color: #fff; box-shadow: 0 10px 30px rgba(239, 68, 68, 0.5); transform: scale(1.05);}
+        .agree-btn.selected.neutral { background: #f59e0b; color: #fff; box-shadow: 0 10px 30px rgba(245, 158, 11, 0.5); transform: scale(1.05);}
+        .agree-btn.selected.agree { background: #10b981; color: #000; box-shadow: 0 10px 30px rgba(16, 185, 129, 0.5); transform: scale(1.05);}
+        .agree-container.locked .agree-btn:not(.selected) { opacity: 0.3; pointer-events: none; filter: grayscale(100%);}
+
+        /* Name 3 Challenge */
+        .n3-circle { width: 80px; height: 80px; border-radius: 50%; border: 3px dashed rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; font-size: 2rem; color: rgba(255,255,255,0.3); cursor: pointer; transition: 0.3s; background: rgba(0,0,0,0.4);}
+        .n3-circle.filled { background: var(--brand-main); border-color: var(--brand-main); border-style: solid; color: #fff; transform: scale(1.1); box-shadow: 0 0 20px var(--accent-glow); }
+        .n3-checks-container { display: flex; gap: 20px; justify-content: center; margin-top: 30px; display: none; animation: popIn 0.5s ease; }
+
+        /* Topic Cards */
+        .topic-grid { display: flex; gap: 20px; justify-content: center; perspective: 1000px; margin-bottom: 30px; flex-wrap: wrap;}
+        .t-card { width: 220px; height: 300px; position: relative; cursor: pointer; transform-style: preserve-3d; transition: 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .t-card.flipped { transform: rotateY(180deg) scale(1.05); z-index: 10; pointer-events: none;}
+        .t-front, .t-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 24px; display: flex; align-items: center; justify-content: center; padding: 25px; text-align: center; box-shadow: 0 15px 30px rgba(0,0,0,0.5);}
+        .t-front { background: linear-gradient(135deg, var(--brand-main), #1e3a8a); color: #fff; font-size: 5rem; border: 4px solid rgba(255,255,255,0.2); }
+        .t-front::after { content: '?'; position: absolute; font-family: var(--font-display); font-weight: 900; opacity: 0.8;}
+        .t-front:hover { filter: brightness(1.1); transform: translateY(-5px); box-shadow: 0 20px 40px var(--accent-glow);}
+        .t-back { background: #fff; color: #0f172a; transform: rotateY(180deg); font-size: 1.4rem; font-weight: 800; border: 4px solid var(--brand-main); flex-direction: column; gap: 15px;}
+
+        /* The Arena Cards */
+        .arena-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; perspective: 1000px; margin-top: 30px; width: 100%; max-width: 400px; margin-inline: auto;}
+        .arena-card { background: transparent; min-height: 260px; cursor: pointer; width: 100%; display: block; }
+        .arena-card-inner { position: relative; width: 100%; height: 100%; min-height: 260px; text-align: center; transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-style: preserve-3d; }
+        .arena-card.flipped .arena-card-inner { transform: rotateY(180deg); }
+        .arena-card-front, .arena-card-back { position: absolute; top: 0; left: 0; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 25px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.15); box-sizing: border-box; }
+        .arena-card-front { background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); }
+        .arena-card-front i { font-size: 3.5rem; color: var(--brand-main); margin-bottom: 15px; filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.5));}
+        .arena-card-front h3 { font-family: var(--font-display); font-size: 1.5rem; color: #fff; letter-spacing: 2px; margin: 0;}
+        .arena-card-back { background: var(--brand-main); color: #fff; transform: rotateY(180deg); box-shadow: 0 15px 40px var(--accent-glow); padding: 20px; }
+        .arena-card-back p { color: #fff; font-size: 1.15rem; font-weight: 700; margin: 0; line-height: 1.6; }
+
+        /* FOOTER */
+        .footer { position: fixed; bottom: 0; left: 0; width: 100%; height: 85px; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px); display: flex; justify-content: space-between; align-items: center; padding: 0 5%; z-index: 150; border-top: 1px solid rgba(255,255,255,0.05); transition: 0.4s; }
+        .footer.hidden-mode { transform: translateY(100px); }
+        .nav-btn { background: transparent; border: none; color: #94a3b8; padding: 12px 25px; font-weight: 800; cursor: pointer; transition: 0.3s; font-family: var(--font-code); display: flex; align-items: center; gap: 10px; }
+        .nav-btn:hover:not(:disabled) { color: #fff; }
+        .nav-btn.next { background: #fff; color: #000; border-radius: 12px; padding: 15px 40px; box-shadow: 0 5px 15px rgba(255,255,255,0.1); }
+        .nav-btn.next:hover { background: var(--brand-main); color: #fff; box-shadow: 0 5px 25px var(--accent-glow); transform: translateY(-2px);}
+        .nav-btn.next.pulsing { animation: pulseNext 2s infinite; background: var(--brand-main); color: #fff; }
+        .progress-bar { position: fixed; bottom: 85px; left: 0; height: 5px; background: var(--brand-main); transition: 0.4s; z-index: 151; box-shadow: 0 0 10px var(--brand-main);}
+        @keyframes pulseNext { 0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(59, 130, 246, 0); } 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); } }
+
+        /* TEACHER HUD & SMART DICT */
+        .sidebar-panel { position: fixed; top: 0; right: -600px; width: 500px; height: 100vh; background: rgba(15,23,42,0.98); z-index: 250; padding: 100px 50px 50px; transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1); border-left: 1px solid var(--glass-border); box-shadow: -30px 0 60px rgba(0,0,0,0.8); backdrop-filter: blur(20px);}
+        .sidebar-panel.right-open { right: 0; }
+        .sidebar-close { position: absolute; top: 30px; left: 30px; background: rgba(255,255,255,0.05); border: none; color: #fff; width: 50px; height: 50px; border-radius: 15px; font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s;}
+        .sidebar-close:hover { background: var(--incorrect); }
+
+        .teacher-hud { position: fixed; top: 0; left: -500px; width: 450px; height: 100vh; background: rgba(15,23,42,0.98); z-index: 250; padding: 100px 50px 50px; transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1); border-right: 1px solid var(--glass-border); box-shadow: 30px 0 60px rgba(0,0,0,0.8); overflow-y: auto; backdrop-filter: blur(20px);}
+        .teacher-hud.open { left: 0; }
+        .hud-btn { width: 100%; padding: 15px; background: #1e293b; border: 1px solid var(--glass-border); color: #fff; border-radius: 12px; margin-bottom: 15px; cursor: pointer; font-family: var(--font-body); font-weight: 700; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; transition: 0.2s;}
+        .hud-btn:hover { background: var(--accent); border-color: var(--accent); color: #000; }
+        .hud-btn.warning:hover { background: var(--incorrect); border-color: var(--incorrect); color: #fff; }
+        .hud-timer { font-family: var(--font-code); font-size: 3.5rem; color: var(--brand-main); text-align: center; margin-bottom: 20px; font-weight: 900;}
+
+        /* ALERTS */
+        .alert-overlay { position: fixed; inset: 0; pointer-events: none; display: flex; align-items: center; justify-content: center; z-index: 9999; opacity: 0; transition: 0.3s; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);}
+        .alert-text { font-family: var(--font-display); font-size: 6rem; text-transform: uppercase; font-weight: 900; text-shadow: 0 10px 40px rgba(0,0,0,0.8); transform: scale(0.5); transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-align: center; line-height: 1;}
+        .alert-overlay.show { opacity: 1; }
+        .alert-overlay.show .alert-text { transform: scale(1); }
+        .alert-praise { color: var(--correct); filter: drop-shadow(0 0 30px var(--correct)); }
+        .alert-cue { color: var(--accent); filter: drop-shadow(0 0 30px var(--accent)); }
+        .alert-star { color: var(--brand-main); font-size: 8rem; filter: drop-shadow(0 0 50px var(--brand-main)); }
+
+        .dict-word { font-family: var(--font-display); font-size: 3.5rem; color: var(--brand-main); margin-bottom: 5px; text-transform: uppercase; }
+        .dict-phonetic { font-family: var(--font-code); color: var(--accent); font-size: 1.2rem; margin-bottom: 25px; display: block; }
+        .dict-def { font-size: 1.4rem; color: #fff; line-height: 1.6; border-left: 4px solid var(--brand-main); padding-left: 20px; }
+        #d-video-wrapper { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 15px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); margin-top: 20px; display: none; position: relative;}
+        #d-video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        .hl { color: var(--brand-main); font-weight: 800; border-bottom: 2px dashed var(--brand-main); cursor: help; padding: 0 4px; transition: 0.2s;}
+        .hl:hover { background: rgba(59, 130, 246, 0.15); border-bottom-style: solid; border-radius: 4px;}
+
+        @keyframes popIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        @keyframes shake { 0%, 100% {transform: translateX(0);} 25% {transform: translateX(-5px);} 75% {transform: translateX(5px);} }
+    </style>
+</head>
+<body>
+
+    <div class="correction-overlay"></div>
+
+    <div class="ambient-orbs">
+        <div class="bg-image"></div>
+        <div class="bg-overlay"></div>
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+    </div>
+
+    <div class="alert-overlay" id="alert-screen"><div class="alert-text" id="alert-msg">GREAT JOB!</div></div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="logo"><i class="fa-solid fa-briefcase"></i> WOLF LABS <span>CAREER SKILLS</span></div>
+        <div class="nav-controls">
+            <button class="teacher-tool" onclick="window.showHub('teacher-hud')" title="Teacher HUD"><i class="fa-solid fa-toolbox"></i></button>
+            <div style="width: 1px; height: 25px; background: rgba(255,255,255,0.1); margin: 0 5px;"></div>
+            <button class="teacher-tool" onclick="window.toggleFullscreen()" title="Fullscreen"><i class="fa-solid fa-expand"></i></button>
+        </div>
+    </nav>
+
+    <!-- TEACHER HUD -->
+    <div class="teacher-hud" id="teacher-hud">
+        <button class="sidebar-close" style="left: auto; right: 30px;" onclick="document.getElementById('teacher-hud').classList.remove('open')"><i class="fa-solid fa-xmark"></i></button>
+        <p style="font-family: var(--font-code); color: var(--brand-main); font-size: 0.8rem; margin-bottom: 20px; letter-spacing: 2px;">// TEACHER TOOL SET</p>
+        
+        <div class="hud-timer" id="hud-timer">00:60</div>
+        <button class="hud-btn" onclick="startTimer()"><i class="fa-solid fa-play"></i> Start 60s Timer</button>
+        <button class="hud-btn warning" onclick="toggleCorrectionMode()" style="background: rgba(239, 68, 68, 0.1); border-color: var(--incorrect); color: var(--incorrect);"><i class="fa-solid fa-hand-paper"></i> Correction Mode</button>
+        
+        <div style="margin-top: 30px; border-top: 1px solid var(--glass-border); padding-top: 25px;">
+            <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 15px; font-weight: 700; font-family: var(--font-code);">STUDENT POINTS</p>
+            <div style="display: flex; align-items: center; justify-content: space-between; background: #000; padding: 15px 25px; border-radius: 12px; border: 1px solid var(--glass-border);">
+                <span style="color: var(--brand-main); font-size: 2rem; font-weight: 900;" id="hud-stars">⭐ 0</span>
+                <button class="hud-btn" style="width: auto; margin: 0; padding: 10px 20px;" onclick="awardStar()">+1</button>
+            </div>
+        </div>
+
+        <div style="margin-top: 30px; border-top: 1px solid var(--glass-border); padding-top: 25px;">
+            <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 15px; font-weight: 700; font-family: var(--font-code);">LIVE CUES</p>
+            <button class="hud-btn" style="background: rgba(245, 158, 11, 0.1); border-color: var(--accent); color: var(--accent);" onclick="showAlert('SPEAK<br>SLOWER 🐢', 'cue')"><i class="fa-solid fa-turtle"></i> Speak Slower</button>
+            <button class="hud-btn" style="background: rgba(245, 158, 11, 0.1); border-color: var(--accent); color: var(--accent);" onclick="showAlert('LOUDER<br>PLEASE 🔊', 'cue')"><i class="fa-solid fa-volume-high"></i> Speak Louder</button>
+        </div>
+
+        <div style="margin-top: 30px; border-top: 1px solid var(--glass-border); padding-top: 25px;">
+            <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 15px; font-weight: 700; font-family: var(--font-code);">PRAISE GENERATOR</p>
+            <button class="hud-btn" onclick="showAlert('PERFECT<br>PRONUNCIATION!', 'praise')"><i class="fa-solid fa-comment-dots"></i> Perfect Pronunciation</button>
+            <button class="hud-btn" onclick="showAlert('AMAZING<br>VOCABULARY!', 'praise')"><i class="fa-solid fa-spell-check"></i> Amazing Vocab</button>
+            <button class="hud-btn" onclick="showAlert('AMAZING<br>ANSWER! 🏆', 'praise')"><i class="fa-solid fa-trophy"></i> Amazing Answer</button>
+        </div>
+    </div>
+
+    <!-- SMART DICT (WITH SURGICAL VIDEO CUTS) -->
+    <div class="sidebar-panel" id="dict-panel">
+        <button class="sidebar-close" onclick="closeDict()"><i class="fa-solid fa-xmark"></i></button>
+        <p style="font-family: var(--font-code); color: var(--brand-main); font-size: 0.8rem; margin-bottom: 20px; letter-spacing: 2px;">// SMART DICTIONARY</p>
+        <h1 id="d-word" class="dict-word">Word</h1>
+        <span id="d-phonetic" class="dict-phonetic">/phonetic/</span>
+        <div class="dict-def" id="d-def">Definition here.</div>
+        
+        <!-- Video Context Area -->
+        <div id="d-video-wrapper">
+            <iframe id="d-video" src="" allow="autoplay; fullscreen"></iframe>
+        </div>
+
+        <div style="margin-top: 30px; padding: 25px; background: rgba(255,255,255,0.03); border-radius: 15px; border: 1px solid rgba(255,255,255,0.05);">
+            <p style="font-size: 0.9rem; text-align: left; color: var(--brand-main); font-weight: 800; text-transform: uppercase;">Real Context:</p>
+            <p id="d-ex" style="text-align: left; font-style: italic; margin-top: 10px; font-size: 1.1rem; color: #cbd5e1;"></p>
+        </div>
+        
+        <div id="dict-hub-container" style="display: none; margin-top: 30px; background: rgba(0,0,0,0.6); padding: 25px; border-radius: 15px; border: 1px solid var(--accent); position: relative;">
+            <span style="position: absolute; top: -12px; left: 20px; background: var(--accent); color: #000; padding: 4px 10px; font-weight: 800; border-radius: 5px; font-size: 0.8rem;">🎙️ LET'S TALK</span>
+            <p id="d-speak" style="color: #fff; font-size: 1.2rem; font-weight: 600; line-height: 1.5; margin: 0; text-align: left;"></p>
+        </div>
+    </div>
+
+    <main class="main-container" id="slides-container">
+
+        <!-- 1. ADMIN -->
+        <div class="slide active">
+            <div class="glass-panel">
+                <h2><i class="fa-solid fa-user-shield"></i> ADMIN PROTOCOL</h2>
+                <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid var(--brand-main); padding: 30px; border-radius: 20px; text-align: left; width: 100%; max-width: 800px;">
+                    <p style="text-align: left; margin-bottom: 12px; font-size: 1.2rem;"><strong>LEVEL:</strong> A2 (Pre-Intermediate)</p>
+                    <p style="text-align: left; margin-bottom: 12px; font-size: 1.2rem;"><strong>TOPIC:</strong> Resume & Career Skills</p>
+                    <p style="text-align: left; margin-bottom: 12px; font-size: 1.2rem;"><strong>CORE VOCAB:</strong> Hard Skills, Soft Skills, Employer, Resume, Leadership.</p>
+                    <p style="text-align: left; margin-bottom: 12px; font-size: 1.2rem;"><strong>GRAMMAR FOCUS:</strong> Abilities (I can / I know how to).</p>
+                    <p style="text-align: left; font-size: 1.2rem; color: var(--brand-main); margin-bottom: 0;"><strong>LESSON FLOW:</strong> Full Video ➔ Grammar Builder ➔ Strengths Assessment Quizzes ➔ Deep Conversation Arena.</p>
+                </div>
+                <div style="margin-top: 30px; background: rgba(0,0,0,0.4); padding: 25px; border-radius: 15px; border-left: 4px solid var(--brand-main); text-align: left; width: 100%; max-width: 800px;">
+                    <p style="color: var(--text-dim); font-family: var(--font-code); font-size: 1.1rem; line-height: 1.6; margin: 0;">
+                        <span style="color: var(--brand-main); font-weight: 800;">// PRO TIPS FOR TEACHERS:</span><br><br>
+                        This lesson is 100% gamified and focused on maximum conversational output. It features exactly 25 slides including the brand new <strong>Strengths Assessment</strong>. Use the <strong>Teacher HUD</strong> in the top menu to control the immersion!
+                    </p>
+                </div>
+                <button class="btn-start" style="margin-top: 30px;" onclick="window.nextSlide()">INITIALIZE LESSON</button>
+            </div>
+        </div>
+
+        <!-- 2. COVER -->
+        <div class="slide">
+            <div class="glass-panel" style="text-align: center; border: none; background: transparent; box-shadow: none;">
+                <div style="font-size: 8rem; color: var(--brand-main); filter: drop-shadow(0 0 30px var(--accent-glow)); animation: pulse 3s infinite; margin-bottom: 20px;">
+                    <i class="fa-solid fa-user-tie"></i>
+                </div>
+                <h1 style="font-size: 5.5rem; letter-spacing: -1px; text-transform: uppercase; margin-bottom: 10px; text-shadow: 0 10px 30px rgba(0,0,0,0.8);">
+                    TOP<br><span style="color: var(--brand-main);">SKILLS</span>
+                </h1>
+                <p style="font-size: 1.5rem; letter-spacing: 5px; color: var(--accent); font-weight: 800; margin-bottom: 40px;">A2 MASTERCLASS</p>
+                <button class="btn-start" style="font-size: 1.5rem; padding: 25px 60px;" onclick="window.nextSlide()">START LESSON <i class="fa-solid fa-arrow-right" style="margin-left: 10px;"></i></button>
+            </div>
+        </div>
+
+        <!-- 3. ICEBREAKER -->
+        <div class="slide">
+            <div class="glass-panel">
+                <h2><i class="fa-solid fa-fire"></i> ICEBREAKER</h2>
+                <p style="font-size: 1.8rem;">Hi there! Do you have a job right now?</p>
+                <div class="ww-grid">
+                    <button class="btn-start" style="background: rgba(0,0,0,0.6); border: 1px solid var(--accent); color: #fff;" onclick="document.getElementById('hub-ice').style.display='block'">YES, I DO</button>
+                    <button class="btn-start" style="background: rgba(0,0,0,0.6); border: 1px solid var(--brand-main); color: #fff;" onclick="document.getElementById('hub-ice').style.display='block'">NO, I AM A STUDENT</button>
+                </div>
+                <div class="speaking-hub" id="hub-ice">
+                    <p><strong>TEACHER:</strong> Ask "What is your dream job?"</p>
+                    <button class="starter-reveal-btn" onclick="window.revealStarter(this)"><i class="fa-solid fa-lightbulb"></i> Show Speaking Starter</button>
+                    <div class="starter-content">
+                        <span class="starter-phrase">"I work as a... / My dream job is to be a..."</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. VOCAB 1: OPEN THE BOX -->
+        <div class="slide">
+            <div class="glass-panel">
+                <h2><i class="fa-solid fa-box-open"></i> KEY VOCABULARY</h2>
+                <p>Click the boxes to reveal the professional words.</p>
+                <div class="ww-grid">
+                    <div class="ww-box" onclick="window.openBox(this, 'Skill', 'btn-v1')">
+                        <i class="fa-solid fa-bolt"></i><span style="font-family: var(--font-code); color: var(--text-dim); font-size: 1.2rem;">1</span>
+                    </div>
+                    <div class="ww-box" onclick="window.openBox(this, 'Employer', 'btn-v1')">
+                        <i class="fa-solid fa-building-user"></i><span style="font-family: var(--font-code); color: var(--text-dim); font-size: 1.2rem;">2</span>
+                    </div>
+                    <div class="ww-box" onclick="window.openBox(this, 'Resume', 'btn-v1')">
+                        <i class="fa-solid fa-file-lines"></i><span style="font-family: var(--font-code); color: var(--text-dim); font-size: 1.2rem;">3</span>
+                    </div>
+                </div>
+                <button class="btn-start" style="margin-top: 30px; display: none;" id="btn-v1" onclick="window.nextSlide()">PROCEED</button>
+            </div>
+        </div>
+
+        <!-- 5. FULL VIDEO -->
+        <div class="slide">
+            <div class="glass-panel">
+                <h2><i class="fa-brands fa-youtube"></i> CAREER SKILLS</h2>
+                <p>Watch the full video. What is the difference between hard and soft skills?</p>
+                <div class="video-wrapper">
+                    <iframe data-src="https://www.youtube-nocookie.com/embed/_bZi-34IFxs?start=0&rel=0&modestbranding=1" allowfullscreen></iframe>
+                </div>
+                <button class="btn-start" onclick="window.nextSlide()">I FINISHED WATCHING</button>
+            </div>
+        </div>
+
+        <!-- 6. VIDEO COMPREHENSION -->
+        <div class="slide">
+            <div class="glass-panel">
+                <h2><i class="fa-solid fa-magnifying-glass"></i> VIDEO BREAKDOWN</h2>
+                <p>Click to reveal! What were the 3 soft skills mentioned in the video?</p>
+                <div class="ww-grid" style="gap: 30px; margin-top: 30px;">
+                    <div class="ww-box" style="width: 250px; height: 120px;" onclick="this.classList.add('opened'); this.nextElementSibling.style.display='flex'">
+                        <i class="fa-solid fa-question"></i>
+                        <span style="font-family: var(--font-code); color: var(--text-dim);">Skill 1</span>
+                    </div>
+                    <div style="display:none; width: 250px; height: 120px; background: rgba(16, 185, 129, 0.1); border: 2px solid var(--correct); border-radius: 20px; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; color: var(--correct); animation: popIn 0.4s;">LEADERSHIP</div>
+
+                    <div class="ww-box" style="width: 250px; height: 120px;" onclick="this.classList.add('opened'); this.nextElementSibling.style.display='flex'">
+                        <i class="fa-solid fa-question"></i>
+                        <span style="font-family: var(--font-code); color: var(--text-dim);">Skill 2</span>
+                    </div>
+                    <div style="display:none; width: 250px; height: 120px; background: rgba(16, 185, 129, 0.1); border: 2px solid var(--correct); border-radius: 20px; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; color: var(--correct); animation: popIn 0.4s; text-align: center;">PROBLEM<br>SOLVING</div>
+
+                    <div class="ww-box" style="width: 250px; height: 120px;" onclick="this.classList.add('opened'); this.nextElementSibling.style.display='flex'; setTimeout(() => { document.getElementById('hub-comp').style.display='block'; }, 500);">
+                        <i class="fa-solid fa-question"></i>
+                        <span style="font-family: var(--font-code); color: var(--text-dim);">Skill 3</span>
+                    </div>
+                    <div style="display:none; width: 250px; height: 120px; background: rgba(16, 185, 129, 0.1); border: 2px solid var(--correct); border-radius: 20px; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; color: var(--correct); animation: popIn 0.4s;">ORGANIZATION</div>
+                </div>
+                <div class="speaking-hub" id="hub-comp">
+                    <p><strong>TEACHER:</strong> "Great! Which of these skills do you think is the most important?"</p>
+                    <button class="starter-reveal-btn" onclick="window.revealStarter(this)"><i class="fa-solid fa-lightbulb"></i> Show Speaking Starter</button>
+                    <div class="starter-content">
+                        <span class="starter-phrase">"I think that... is the most important skill because..."</span>
+                    </div>
+                    <button class="btn-start" style="margin-top: 20px;" onclick="window.nextSlide()">CONTINUE</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. GRAMMAR SANDBOX -->
+        <div class="slide">
+            <div class="glass-panel">
+                <h2><i class="fa-solid fa-sliders"></i> GRAMMAR SANDBOX</h2>
+                <p style="font-size: 1.6rem; margin-bottom: 40px;">How do we describe our abilities?</p>
+                <div class="grammar-switch">
+                    <button class="switch-btn active" onclick="window.switchGrammar(this, 'I CAN use a computer.', 'USING MODAL VERBS', 'sandbox-sentence-1', 'sandbox-rule-1')">Simple</button>
+                    <button class="switch-btn" onclick="window.switchGrammar(this, 'I KNOW HOW TO use a computer.', 'USING KNOWLEDGE VERBS', 'sandbox-sentence-1', 'sandbox-rule-1')">Advanced</button>
+                </div>
+                <div class="sandbox-display">
+                    <div id="sandbox-rule-1" style="color: var(--brand-main); font-size: 1.2rem; letter-spacing: 2px; font-weight: 800; font-family: var(--font-code); margin-bottom: 10px;">USING MODAL VERBS</div>
+                    <span id="sandbox-sentence-1" style="color: #fff; font-size: 3rem; font-weight: 700; line-height: 1.4;">I <span style="color:var(--brand-main);">CAN</span> use a computer.</span>
+                </div>
+                <button class="btn-start" style="margin-top: 30px;" onclick="window.nextSlide()">I UNDERSTAND</button>
+            </div>
+        </div>
+
+        <!-- 8. SYNTAX BUILDER -->
+        <div class="slide">
+            <div class="glass-panel">
+                <h2><i class="fa-solid fa-wrench"></i> BUILD THE SENTENCE</h2>
+                <p>Reorder the words to describe an ability.</p>
+                <div class="drop-zone" id="dz-1"></div>
+                <div class="ww-grid" style="gap: 15px; margin-top: 0;">
+                    <span class="word-chip" onclick="window.moveWord(this, 'dz-1', 'You,might,know,how,to,use,a,system.')">to</span>
+                    <span class="word-chip" onclick="window.moveWord(this, 'dz-1', 'You,might,know,how,to,use,a,system.')">use</span>
+                    <span class="word-chip" onclick="window.moveWord(this, 'dz-1', 'You,might,know,how,to,use,a,system.')">You</span>
+                    <span class="word-chip" onclick="window.moveWord(this, 'dz-1', 'You,might,know,how,to,use,a,system.')">how</span>
+                    <span class="word-chip" onclick="window.moveWord(this, 'dz-1', 'You,might,know,how,to,use,a,system.')">might</span>
+                    <span class="word-chip" onclick="window.moveWord(this, 'dz-1', 'You,might,know,how,to,use,a,system.')">system.</span>
+                    <span class="word-chip" onclick="window.moveWord(this, 'dz-1', 'You,might,know,how,to,use,a,system.')">know</span>
+                    <span class="word-chip" onclick="window.moveWord(this, 'dz-1', 'You,might,know,how,to,use,a,system.')">a</span>
+                </div>
+                <div class="speaking-hub" id="hub-syn">
+                    <p><strong>TEACHER:</strong> "Excellent! Ask the student: What is something you know how to do?"</p>
+                    <button class="starter-reveal-btn" onclick="window.revealStarter(this)"><i class="fa-solid fa-lightbulb"></i> Show Speaking Starter</button>
+                    <div class="starter-content">
+                        <span class="starter-phrase">"I know how to play the guitar/cook pasta/use Photoshop."</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 9. VOCAB 2: SURGICAL VIDEO DICT -->
+        <div class="slide">
+            <div class="glass-panel">
+                <h2><i class="fa-solid fa-tags"></i> SOFT SKILLS EXPLORER</h2>
+                <p>Click a skill to see the exact moment it appears in the video!</p>
+                
+                <div class="ww-grid" style="gap: 25px; margin-top: 30px; max-width: 800px;">
+                    <div class="ww-box" onclick="window.openBox(this, 'Leadership', 'btn-v2')">
+                        <i class="fa-solid fa-users" style="font-size: 3.5rem;"></i>
+                        <span style="font-family: var(--font-code); font-weight: 700; margin-top: 10px; color: #fff;">LEADERSHIP</span>
+                    </div>
+                    <div class="ww-box" onclick="window.openBox(this, 'Problem Solving', 'btn-v2')">
+                        <i class="fa-solid fa-puzzle-piece" style="font-size: 3.5rem;"></i>
+                        <span style="font-family: var(--font-code); font-weight: 700; margin-top: 10px; color: #fff; text-align: center;">PROBLEM<br>SOLVING</span>
+                    </div>
+                    <div class="ww-box" onclick="window.openBox(this, 'Organization', 'btn-v2')">
+                        <i class="fa-solid fa-folder-tree" style="font-size: 3.5rem;"></i>
+                        <span style="font-family: var(--font-code); font-weight: 700; margin-top: 10px; color: #fff; text-align: center;">ORGANIZATION</span>
+                    </div>
+                </div>
+
+                <div style="margin-top: 40px; color: var(--text-dim); font-size: 1.1rem; font-style: italic;">(The Smart Dict will open and play the exact scene for each skill).</div>
+                <button class="btn-start" style="margin-top: 30px; display: none;" id="btn-v2" onclick="window.nextSlide()">NEXT STEP</button>
+            </div>
+        </div>
+
+        <!-- 10. THE SORTING SCALE -->
+        <div class="slide">
+            <div class="glass-panel">
+                <h2><i class="fa-solid fa-scale-balanced"></i> THE SKILL SORTER</h2>
+                <p>Hard Skill or Soft Skill? Sort them correctly!</p>
+                
+                <div class="scale-container">
+                    <div class="scale-display" id="scale-display">PROGRAMMING</div>
+                    <div class="scale-controls">
+                        <button class="scale-btn" onclick="window.weighItem('HARD')">HARD <span style="display:block; font-size: 1rem; font-weight: 400; font-family: var(--font-body);">(Technical)</span></button>
+                        <button class="scale-btn" onclick="window.weighItem('SOFT')">SOFT <span style="display:block; font-size: 1rem; font-weight: 400; font-family: var(--font-body);">(Social)</span></button>
+                    </div>
+                    <div class="scale-baskets">
+                        <div class="basket" id="basket-hard" data-label="HARD SKILLS"></div>
+                        <div class="basket" id="basket-soft" data-label="SOFT SKILLS"></div>
+                    </div>
+                </div>
+
+                <div class="speaking-hub" id="hub-scale">
+                    <p><strong>TEACHER:</strong> "Great job sorting! Now, let's find out YOUR strengths."</p>
+                    <button class="btn-start" style="margin-top: 15px;" onclick="window.nextSlide()">NEXT</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 11. INTERACTIVE QUIZ: STRENGTHS ASSESSMENT -->
+        <div class="slide">
+            <div class="glass-panel">
+                <h2><i class="fa-solid fa-chart-pie"></i> STRENGTHS ASSESSMENT</h2>
+                <p>Answer the questions honestly to discover your professional profile!</p>
+                
+                <div class="quiz-container" id="quiz-container">
+                    <div class="quiz-step active" id="quiz-step-1">
+                        <div class="quiz-q">1. A coworker is stressed. What do you do?</div>
+                        <div class="quiz-options">
+                            <div class="quiz-opt" onclick="window.answerQuiz('hard', 1)"><i class="fa-solid fa-laptop-code" style="display:block; font-size: 2rem; margin-bottom: 10px; color: var(--brand-main);"></i> I help them fix their task.</div>
+                            <div class="quiz-opt" onclick="window.answerQuiz('soft', 1)"><i class="fa-solid fa-comments" style="display:block; font-size: 2rem; margin-bottom: 10px; color: var(--accent);"></i> I listen to them and try to understand.</div>
+                        </div>
+                    </div>
+                    <div class="quiz-step" id="quiz-step-2">
+                        <div class="quiz-q">2. During a presentation, you prefer to...</div>
+                        <div class="quiz-options">
+                            <div class="quiz-opt" onclick="window.answerQuiz('soft', 2)"><i class="fa-solid fa-users" style="display:block; font-size: 2rem; margin-bottom: 10px; color: var(--accent);"></i> Speak clearly to the audience.</div>
+                            <div class="quiz-opt" onclick="window.answerQuiz('hard', 2)"><i class="fa-solid fa-book-open" style="display:block; font-size: 2rem; margin-bottom: 10px; color: var(--brand-main);"></i> Research the data and build the slides.</div>
+                        </div>
+                    </div>
+                    <div class="quiz-step" id="quiz-step-3">
+                        <div class="quiz-q">3. In a team conflict, you usually...</div>
+                        <div class="quiz-options">
+                            <div class="quiz-opt" onclick="window.answerQuiz('hard', 3)"><i class="fa-solid fa-screwdriver-wrench" style="display:block; font-size: 2rem; margin-bottom: 10px; color: var(--brand-main);"></i> Focus on a logical compromise.</div>
+                            <div class="quiz-opt" onclick="window.answerQuiz('soft', 3)"><i class="fa-solid fa-handshake-angle" style="display:block; font-size: 2rem; margin-bottom: 10px; color: var(--accent);"></i> Make sure everyone is happy and calm.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="quiz-result" id="quiz-result">
+                        <i class="fa-solid fa-medal" style="font-size: 5rem; color: var(--brand-main); margin-bottom: 20px;"></i>
+                        <h3 id="qr-title" style="font-family: var(--font-display); font-size: 2rem; color: #fff; margin-bottom: 15px; text-transform: uppercase;">PROFILE</h3>
+                        <p id="qr-desc" style="font-size: 1.3rem; color: var(--text-dim); line-height: 1.5; margin-bottom: 30px;">Description</p>
+                        <button class="btn-start" onclick="window.nextSlide()">CONTINUE</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 12. TEXTING SCENARIO 1 -->
+        <div class="slide">
+            <div class="glass-panel">
+                <h2><i class="fa-brands fa-whatsapp"></i> TEXTING A RECRUITER</h2>
+                <p>Reply to the Recruiter properly!</p>
+                <div class="phone-ui">
+                    <div class="phone-notch"></div>
+                    <div class="phone-top-bar"><i class="fa-solid fa-briefcase" style="color:var(--brand-main); margin-right:8px;"></i> Recruiter Sarah</div>
+                    <div class="phone-chat-area">
+                        <div class="phone-msg received">Hello! Are you good with Microsoft Excel and Word?</div>
+                        <div class="typing-indicator" id="typing-dot-1">
+                            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                        </div>
+                    </div>
+                    <div class="phone-options-area" id="chat-opts-1">
+                        <button class="phone-opt-btn" onclick="window.advanceChat(this, false, 'chat-opts-1', 'typing-dot-1')">Yes, I can to use them.</button>
+                        <button class="phone-opt-btn" onclick="window.advanceChat(this, true, 'chat-opts-1', 'typing-dot-1', 'p_text1')">Yes! I know how to use those programs.</button>
+                    </div>
+                </div>
+                <div class="speaking-hub" id="p_text1" style="display:none; margin-top:20px; text-align: left; width: 100%; max-width: 400px;">
+                    <p><strong>TEACHER:</strong> "Great grammar! Excel and Word are considered Hard Skills."</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 13. THE TRUTH BOARD -->
+        <div class="slide">
+            <div class="glass-panel">
+                <h2><i class="fa-solid fa-list-check"></i> THE RESUME CHECK</h2>
+                <p>Are these facts True or False according to the video?</p>
+                <div class="truth-board">
+                    <div class="truth-row" id="tr-1">
+                        <span class="truth-text">1. Soft skills can be applied in any job.</span>
+                        <div class="tf-btns">
+                            <button class="tf-btn t-btn" onclick="window.checkTruth(this, 'tr-1', true, true)">TRUE</button>
+                            <button class="tf-btn f-btn" onclick="window.checkTruth(this, 'tr-1', false, true)">FALSE</button>
+                        </div>
+                    </div>
+                    <div class="truth-row" id="tr-2">
+                        <span class="truth-text">2. Employers do not look at the skills on your resume.</span>
+                        <div class="tf-btns">
+                            <button class="tf-btn t-btn" onclick="window.checkTruth(this, 'tr-2', true, false)">TRUE</button>
+                            <button class="tf-btn f-btn" onclick="window.checkTruth(this, 'tr-2', false, false)">FALSE</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 14. NEW: SOFT SKILL SUPERPOWER QUIZ -->
+        <div class="slide">
+            <div class="glass-panel">
+                <h2><i class="fa-solid fa-wand-magic-sparkles"></i> SOFT SKILL SUPERPOWER</h2>
+                <p>Answer 5 questions to find out your ultimate soft skill!</p>
+                
+                <div class="quiz-container" id="superpower-quiz">
+                    <div class="quiz-step active" id="sq-1">
+                        <div class="quiz-q">1. Your coworker is stressed about a task. You...</div>
+                        <div class="quiz-options">
+                            <div class="quiz-opt" onclick="window.answerSq('empathy', 1)"><i class="fa-solid fa-heart" style="display:block; font-size: 2rem; margin-bottom: 10px; color: var(--incorrect);"></i> Listen to them to understand.</div>
+                            <div class="quiz-opt" onclick="window.answerSq('problem', 1)"><i class="fa-solid fa-wrench" style="display:block; font-size: 2rem; margin-bottom: 10px; color: var(--accent);"></i> Help them fix the task fast.</div>
+                        </div>
+                    </div>
+                    <div class="quiz-step" id="sq-2">
+                        <div class="quiz-q">2. You have a presentation tomorrow. You prefer to...</div>
+                        <div class="quiz-options">
+                            <div class="quiz-opt" onclick="window.answerSq('comm', 2)"><i class="fa-solid fa-microphone" style="display:block; font-size: 2rem; margin-bottom: 10px; color: var(--brand-main);"></i> Speak and connect with the audience.</div>
+                            <div class="quiz-opt" onclick="window.answerSq('problem', 2)"><i class="fa-solid fa-chart-line" style="display:block; font-size: 2rem; margin-bottom: 10px; color: var(--correct);"></i> Research and organize the data.</div>
+                        </div>
+                    </div>
+                    <div class="quiz-step" id="sq-3">
+                        <div class="quiz-q">3. When there is a conflict in the team, you...</div>
+                        <div class="quiz-options">
+                            <div class="quiz-opt" onclick="window.answerSq('empathy', 3)"><i class="fa-solid fa-handshake-angle" style="display:block; font-size: 2rem; margin-bottom: 10px; color: var(--incorrect);"></i> Make sure everyone is happy.</div>
+                            <div class="quiz-opt" onclick="window.answerSq('comm', 3)"><i class="fa-solid fa-comments" style="display:block; font-size: 2rem; margin-bottom: 10px; color: var(--accent);"></i> Talk it out clearly with everyone.</div>
+                        </div>
+                    </div>
+                    <div class="quiz-step" id="sq-4">
+                        <div class="quiz-q">4. A tight deadline is coming. What is your reaction?</div>
+                        <div class="quiz-options">
+                            <div class="quiz-opt" onclick="window.answerSq('problem', 4)"><i class="fa-solid fa-chess-knight" style="display:block; font-size: 2rem; margin-bottom: 10px; color: var(--brand-main);"></i> Create a fast, logical strategy.</div>
+                            <div class="quiz-opt" onclick="window.answerSq('comm', 4)"><i class="fa-solid fa-bullhorn" style="display:block; font-size: 2rem; margin-bottom: 10px; color: var(--accent);"></i> Delegate and explain tasks to others.</div>
+                        </div>
+                    </div>
+                    <div class="quiz-step" id="sq-5">
+                        <div class="quiz-q">5. A new employee arrives. How do you welcome them?</div>
+                        <div class="quiz-options">
+                            <div class="quiz-opt" onclick="window.answerSq('empathy', 5)"><i class="fa-solid fa-mug-hot" style="display:block; font-size: 2rem; margin-bottom: 10px; color: var(--incorrect);"></i> Welcome them warmly and chat.</div>
+                            <div class="quiz-opt" onclick="window.answerSq('problem', 5)"><i class="fa-solid fa-chalkboard-user" style="display:block; font-size: 2rem; margin-bottom: 10px; color: var(--correct);"></i> Show them how the systems work.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="quiz-result" id="sq-result">
+                        <i id="sq-icon" class="fa-solid fa-star" style="font-size: 5rem; color: var(--brand-main); margin-bottom: 20px;"></i>
+                        <h3 id="sq-title" style="font-family: var(--font-display); font-size: 2rem; color: #fff; margin-bottom: 15px; text-transform: uppercase;">SUPERPOWER</h3>
+                        <p id="sq-desc" style="font-size: 1.3rem; color: var(--text-dim); line-height: 1.5; margin-bottom: 30px;">Description</p>
+                        
+                        <div class="speaking-hub" id="sq-followup-hub" style="display:none; text-align: left; width: 100%; margin-bottom: 30px;">
+                            <p><strong>TEACHER:</strong> Ask the student based on their result:</p>
+                            <p id="sq-followup-phrase" style="font-family: var(--font-code); color: var(--brand-main); margin-top: 10px; font-weight: bold;"></p>
+                        </div>
+                        
+                        <button class="btn-start" onclick="window.nextSlide()">CONTINUE</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 15. ODD ONE OUT -->
+        <div class="slide">
+            <div class="glass-panel">
+                <h2><i class="fa-solid fa-object-ungroup"></i> ODD ONE OUT</h2>
+                <p style="margin-bottom: 20px;">Which of these is NOT a <strong style="color:var(--brand-main);">Hard Skill</strong>?</p>
+                
+                <div class="odd-grid">
+                    <button class="odd-btn" onclick="window.checkOddOne(this, false)">CODING</button>
+                    <button class="odd-btn" onclick="window.checkOddOne(this, false)">DATA ANALYSIS</button>
+                    <button class="odd-btn" onclick="window.checkOddOne(this, true)">TEAMWORK</button>
+                    <button class="odd-btn" onclick="window.checkOddOne(this, false)">COPYWRITING</button>
+                </div>
+
+                <div class="speaking-hub" id="p_odd" style="display:none; text-align: left; width: 100%;">
+                    <p>Teacher: "Exactly! Teamwork is a Soft Skill. Are you a good team player?"</p>
+                    <button class="starter-reveal-btn" onclick="window.revealStarter(this)"><i class="fa-solid fa-lightbulb"></i> Show Speaking Starter</button>
+                    <div class="starter-content">
+                        <span class="starter-phrase">"Yes, I like working with people / No, I prefer working alone."</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 16. ACTION SPINNER -->
+        <div class="slide">
+            <div class="glass-panel">
+                <h2><i class="fa-solid fa-bolt"></i> SCENARIO SPINNER</h2>
+                <p style="margin-bottom: 30px;">Spin to get a problem at work. How do you solve it?</p>
+                
+                <div class="slot-machine">
+                    <div id="slot-display" class="slot-display">SPIN ME</div>
+                </div>
+                <button class="btn-start" onclick="window.spinSlot()" style="margin-bottom: 20px;">SPIN</button>
+
+                <div class="speaking-hub" id="p_slot" style="display:none; text-align: left; width: 100%;">
+                    <p>Teacher: Help the student describe how they would use their skills to solve this scenario.</p>
+                    <button class="starter-reveal-btn" onclick="window.revealStarter(this)"><i class="fa-solid fa-lightbulb"></i> Show Speaking Starter</button>
+                    <div class="starter-content">
+                        <span class="starter-phrase">"I would use my communication skills to talk to my boss."</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 17. PICTURE REVEAL -->
+        <div class="slide">
+            <div class="glass-panel">
+                <h2><i class="fa-solid fa-image"></i> PICTURE REVEAL</h2>
+                <p style="margin-bottom: 30px;">Click the tiles to reveal the picture. Describe the situation!</p>
+                
+                <div class="reveal-area">
+                    <div class="reveal-grid" id="reveal-grid">
+                        <div class="reveal-tile" onclick="window.removeTile(this)" style="pointer-events: auto;">1</div>
+                        <div class="reveal-tile" onclick="window.removeTile(this)" style="pointer-events: auto;">2</div>
+                        <div class="reveal-tile" onclick="window.removeTile(this)" style="pointer-events: auto;">3</div>
+                        <div class="reveal-tile" onclick="window.removeTile(this)" style="pointer-events: auto;">4</div>
+                        <div class="reveal-tile" onclick="window.removeTile(this)" style="pointer-events: auto;">5</div>
+                        <div class="reveal-tile" onclick="window.removeTile(this)" style="pointer-events: auto;">6</div>
+                        <div class="reveal-tile" onclick="window.removeTile(this)" style="pointer-events: auto;">7</div>
+                        <div class="reveal-tile" onclick="window.removeTile(this)" style="pointer-events: auto;">8</div>
+                        <div class="reveal-tile" onclick="window.removeTile(this)" style="pointer-events: auto;">9</div>
+                    </div>
+                </div>
+
+                <div class="speaking-hub" id="p_reveal" style="display:none; text-align: left; width: 100%;">
+                    <p>Teacher: "It's a job interview! What do you think they are talking about?"</p>
+                    <button class="starter-reveal-btn" onclick="window.revealStarter(this)"><i class="fa-solid fa-lightbulb"></i> Show Speaking Starter</button>
+                    <div class="starter-content">
+                        <span class="starter-phrase">"I think they are talking about her resume and her skills."</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 18. WOULD YOU RATHER -->
+        <div class="slide">
+            <div class="glass-panel">
+                <h2><i class="fa-solid fa-code-branch"></i> WOULD YOU RATHER?</h2>
+                <p>Choose your preferred working style.</p>
+                <div class="wyr-container">
+                    <div class="wyr-card" onclick="window.selectWyr(this)">
+                        <i class="fa-solid fa-bolt"></i>
+                        <p style="font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; margin:0;">Work fast but completely alone.</p>
+                    </div>
+                    <div class="wyr-card" onclick="window.selectWyr(this)">
+                        <i class="fa-solid fa-users"></i>
+                        <p style="font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; margin:0;">Work slow but in a great team.</p>
+                    </div>
+                </div>
+                <div class="speaking-hub" id="hub-wyr" style="display:none; text-align: left; width: 100%;">
+                    <p>Teacher: Ask the student "Why did you choose that?"</p>
+                    <button class="starter-reveal-btn" onclick="window.revealStarter(this)"><i class="fa-solid fa-lightbulb"></i> Show Speaking Starter</button>
+                    <div class="starter-content">
+                        <span class="starter-phrase">"I prefer to... because I like..."</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 19. STAND YOUR GROUND -->
+        <div class="slide">
+            <div class="glass-panel">
+                <h2><i class="fa-solid fa-balance-scale"></i> STAND YOUR GROUND</h2>
+                <p>What is your opinion on this statement?</p>
+                <div style="background: rgba(0,0,0,0.6); padding: 50px; border-radius: 20px; font-size: 2.5rem; font-weight: 900; margin-bottom: 30px; box-shadow: inset 0 0 30px rgba(0,0,0,0.8); text-align: center; border: 1px dashed var(--glass-border);">
+                    "A good resume is more important than a good interview."
+                </div>
+                <div class="agree-container" id="agree-box">
+                    <button class="agree-btn disagree" onclick="window.selectAgree(this)">DISAGREE</button>
+                    <button class="agree-btn neutral" onclick="window.selectAgree(this)">NEUTRAL</button>
+                    <button class="agree-btn agree" onclick="window.selectAgree(this)">AGREE</button>
+                </div>
+                <div class="speaking-hub" id="hub-agree" style="display:none; text-align: left; width: 100%;">
+                    <p>Teacher: Challenge the student to explain their choice.</p>
+                    <button class="starter-reveal-btn" onclick="window.revealStarter(this)"><i class="fa-solid fa-lightbulb"></i> Show Speaking Starter</button>
+                    <div class="starter-content">
+                        <span class="starter-phrase">"I agree/disagree because an interview shows your personality..."</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 20. QUICK THINKER -->
+        <div class="slide">
+            <div class="glass-panel">
+                <h2><i class="fa-solid fa-stopwatch"></i> QUICK THINKER</h2>
+                <p>Click randomize and name 3 things in the category!</p>
+                
+                <div class="slot-machine" style="height: 120px;">
+                    <div id="category-display" class="slot-display" style="font-size: 2.5rem;">SPIN IT</div>
+                </div>
+                <button class="btn-start" onclick="window.spinCategory(this)" style="margin-bottom: 20px;">RANDOMIZE</button>
+
+                <div class="n3-checks-container" id="n3-checks">
+                    <div class="n3-circle" onclick="window.checkN3(this)">1</div>
+                    <div class="n3-circle" onclick="window.checkN3(this)">2</div>
+                    <div class="n3-circle" onclick="window.checkN3(this)">3</div>
+                </div>
+
+                <div class="speaking-hub" id="hub-n3" style="display:none; text-align: left; width: 100%; margin-top:30px;">
+                    <p>Teacher: Click the circles as the student correctly names the 3 items!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 21. TEXTING SCENARIO 2 -->
+        <div class="slide">
+            <div class="glass-panel">
+                <h2><i class="fa-brands fa-whatsapp"></i> TEXTING A CO-WORKER</h2>
+                <p>Reply to your team member!</p>
+                <div class="phone-ui">
+                    <div class="phone-notch"></div>
+                    <div class="phone-top-bar"><i class="fa-solid fa-user-tie" style="color:var(--brand-main); margin-right:8px;"></i> Mark (Office)</div>
+                    <div class="phone-chat-area">
+                        <div class="phone-msg received">Hey! I have a big problem with my computer. Do you know how to fix it?</div>
+                        <div class="typing-indicator" id="typing-dot-2">
+                            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                        </div>
+                    </div>
+                    <div class="phone-options-area" id="chat-opts-2">
+                        <button class="phone-opt-btn" onclick="window.advanceChat(this, true, 'chat-opts-2', 'typing-dot-2', 'p_text2')">Yes, I know how to fix it. Let me help you.</button>
+                        <button class="phone-opt-btn" onclick="window.advanceChat(this, false, 'chat-opts-2', 'typing-dot-2')">Yes, I know how fix it.</button>
+                    </div>
+                </div>
+                <div class="speaking-hub" id="p_text2" style="display:none; margin-top:20px; text-align: left; width: 100%; max-width: 400px;">
+                    <p><strong>TEACHER:</strong> "Excellent teamwork! Helping others is a great soft skill."</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 22. TOPIC CARDS -->
+        <div class="slide">
+            <div class="glass-panel">
+                <h2><i class="fa-solid fa-clone"></i> PICK A TOPIC</h2>
+                <p>Click a card for a conversation question!</p>
+                <div class="topic-grid">
+                    <div class="t-card" onclick="window.flipTopic(this, 'Do you think soft skills or hard skills are more important?', 'I think... are more important because...')">
+                        <div class="t-front"></div>
+                        <div class="t-back"></div>
+                    </div>
+                    <div class="t-card" onclick="window.flipTopic(this, 'What is one hard skill you want to learn in the future?', 'I want to learn how to...')">
+                        <div class="t-front"></div>
+                        <div class="t-back"></div>
+                    </div>
+                    <div class="t-card" onclick="window.flipTopic(this, 'Do you consider yourself a good leader? Why?', 'Yes, I do. / No, I do not because...')">
+                        <div class="t-front"></div>
+                        <div class="t-back"></div>
+                    </div>
+                </div>
+                <div class="speaking-hub" id="p_cards" style="display:none; text-align: left; width: 100%; margin-top: 30px;">
+                    <p>Teacher: Let the student answer the question naturally.</p>
+                    <button class="starter-reveal-btn" onclick="window.revealStarter(this)"><i class="fa-solid fa-lightbulb"></i> Show Speaking Starter</button>
+                    <div class="starter-content">
+                        <span class="starter-title">Student Starter</span>
+                        <span class="starter-phrase" id="cards-starter-phrase">"..."</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 23. THE ARENA: JOB INTERVIEW -->
+        <div class="slide" data-hub="true">
+            <div class="glass-panel" style="padding: 60px 80px;">
+                <h2><i class="fa-solid fa-users-viewfinder"></i> THE ARENA: JOB INTERVIEW</h2>
+                <p>Click the card to reveal your role!</p>
+                <div class="arena-grid">
+                    <div class="arena-card" onclick="this.classList.toggle('flipped'); document.getElementById('p_20_arena').style.display='block'; window.unlockNextManual();">
+                        <div class="arena-card-inner">
+                            <div class="arena-card-front">
+                                <i class="fa-solid fa-briefcase"></i>
+                                <h3>THE CANDIDATE</h3>
+                            </div>
+                            <div class="arena-card-back">
+                                <p>You are at a job interview. The teacher is the manager. Answer their questions about your skills!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="speaking-hub" id="p_20_arena" style="display:none; width: 100%;">
+                    <p>Teacher: Act as the manager. "Welcome! Can you tell me about your skills?"</p>
+                    <button class="starter-reveal-btn" onclick="window.revealStarter(this)"><i class="fa-solid fa-lightbulb"></i> Show Speaking Starter</button>
+                    <div class="starter-content">
+                        <span class="starter-title">Student Starter</span>
+                        <span class="starter-phrase">"Hello! Yes, I have good organization skills, and I know how to..."</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 24. FINAL PITCH -->
+        <div class="slide" data-hub="true">
+            <div class="glass-panel">
+                <h2><i class="fa-solid fa-bullhorn"></i> THE FINAL PITCH</h2>
+                <p style="font-size: 1.5rem; margin-bottom: 25px;">Pitch yourself to an employer for 60 seconds!</p>
+                <div style="background: rgba(0,0,0,0.5); padding: 40px; border-radius: 20px; border: 1px solid var(--brand-main); display: inline-block; text-align: left; box-shadow: inset 0 10px 30px rgba(0,0,0,0.5);">
+                    <h3 style="color:#fff; margin-bottom:20px; text-transform:uppercase; letter-spacing:2px; font-size:1.5rem;">Mission Checklist:</h3>
+                    <ul style="color: #fff; font-size: 1.5rem; margin-left: 20px; line-height: 2;">
+                        <li>Say what your dream job is.</li>
+                        <li>Mention 1 Hard Skill you have.</li>
+                        <li>Mention 1 Soft Skill you have.</li>
+                    </ul>
+                </div>
+                <br><br>
+                <button class="btn-start" onclick="document.getElementById('p_21_pitch').style.display='block'; window.unlockNextManual();">START PITCH</button>
+                <div class="speaking-hub" id="p_21_pitch" style="display:none; margin-top: 30px; text-align: left; width: 100%;">
+                    <p>Teacher: Listen and celebrate the student's final presentation! 🎉</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 25. MISSION COMPLETE -->
+        <div class="slide" data-hub="false">
+            <div class="glass-panel" style="padding: 80px 50px;">
+                <i class="fa-solid fa-shield-check" style="font-size: 7rem; color: var(--correct); margin-bottom: 25px; filter: drop-shadow(0 0 30px var(--correct)); animation: popIn 0.8s ease-out;"></i>
+                <h1 style="font-size: 5.5rem; color: var(--correct); line-height: 1.1;">LEVEL CLEARED</h1>
+                <p style="font-size: 1.6rem; color: #a3a3a3; margin-bottom: 40px;">Exceptional work today, <span class="dyn-name">Student</span>.</p>
+                
+                <div style="display: flex; gap: 25px; justify-content: center; flex-wrap: wrap;">
+                    <div style="background: rgba(255,255,255,0.05); padding: 30px; border-radius: 20px; border: 1px solid var(--glass-border); width: 280px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                        <i class="fa-solid fa-layer-group" style="font-size: 2.5rem; color: var(--brand-main); margin-bottom: 15px;"></i>
+                        <h3 style="color: #fff; font-size: 1.3rem;">SKILLS</h3>
+                        <p style="font-size: 1.1rem; margin:0;">Career Vocabulary<br>Abilities (Can / Know how to)</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.05); padding: 30px; border-radius: 20px; border: 1px solid var(--glass-border); width: 280px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                        <i class="fa-solid fa-bolt" style="font-size: 2.5rem; color: var(--brand-main); margin-bottom: 15px;"></i>
+                        <h3 style="color: #fff; font-size: 1.3rem;">AUTONOMY</h3>
+                        <p style="font-size: 1.1rem; margin:0;">Strengths Identified<br>Job Interview Prepared</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER CONTROLS -->
+    <div class="progress-container" id="progress-container"><div class="progress-bar"></div></div>
+    <div class="footer" id="main-footer">
+        <button class="nav-btn" id="prev-btn" onclick="window.prevSlide()" disabled><i class="fa-solid fa-chevron-left"></i> BACK</button>
+        <div style="display: flex; align-items: center; gap: 25px;">
+            <div id="step-id" style="color: white; font-family: var(--font-code); font-size: 1.2rem; letter-spacing: 2px; font-weight: 700;">PAGE <span style="color: var(--brand-main); font-size: 1.4rem;">1</span> / 25</div>
+            <button class="nav-btn next" id="next-btn" onclick="window.nextSlide()" style="display: flex;">NEXT <i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+    </div>
+
+    <script>
+        // === DICTIONARY DATA ===
+        const vocabData = {
+            'skill': { word: 'Skill', phonetic: '/skɪl/', def: 'An ability to do an activity or job well.', context: 'We all have skills that employers want.', speak: 'What is your best skill?' },
+            'employer': { word: 'Employer', phonetic: '/ɪmˈplɔɪ.ɚ/', def: 'A person or company that pays people to work for them.', context: 'Employers want employees with the right mix of skills.', speak: 'Who is your current employer?' },
+            'resume': { word: 'Resume', phonetic: '/ˈrez.ə.meɪ/', def: 'A document describing your education and work experience.', context: 'Employers pay special attention to the skills on your resume.', speak: 'Is your resume updated?', vStart: 48, vEnd: 58 },
+            'leadership': { word: 'Leadership', phonetic: '/ˈliː.dɚ.ʃɪp/', def: 'The set of characteristics that make a good leader.', context: 'These are skills like leadership.', speak: 'Do you like to be the leader?', vStart: 38, vEnd: 42 },
+            'problem solving': { word: 'Problem solving', phonetic: '/ˈprɑː.bləm ˌsɑːl.vɪŋ/', def: 'The process of finding solutions to problems.', context: 'Problem solving and organization.', speak: 'Are you good at problem solving?', vStart: 43, vEnd: 47 },
+            'organization': { word: 'Organization', phonetic: '/ˌɔːr.ɡən.əˈzeɪ.ʃən/', def: 'The ability to plan your work or life effectively.', context: 'Problem solving and organization.', speak: 'Is your bedroom organized?', vStart: 47, vEnd: 50 }
+        };
+
+        let sqScore = { empathy: 0, problem: 0, comm: 0 };
+        let studentName = "Student";
+
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const nextBtn = document.getElementById('next-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const currentStepEl = document.getElementById('step-id');
+        const progressBar = document.querySelector('.progress-bar');
+        
+        function update() {
+            slides.forEach((s, i) => s.classList.toggle('active', i === currentSlide));
+            if(prevBtn) prevBtn.disabled = currentSlide === 0;
+            if(currentSlide === slides.length - 1) { if(nextBtn) nextBtn.style.display = 'none'; } 
+            else { if(nextBtn) nextBtn.style.display = 'flex'; }
+
+            if(currentStepEl) currentStepEl.innerHTML = `PAGE <span style="color: var(--brand-main); font-size: 1.4rem;">${currentSlide + 1}</span> / ${slides.length}`;
+            if(progressBar) progressBar.style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
+            
+            if(nextBtn) nextBtn.classList.remove('pulsing');
+
+            slides.forEach((s, i) => {
+                const iframe = s.querySelector('.video-wrapper iframe');
+                if (iframe) {
+                    if (i === currentSlide) {
+                        if (!iframe.src || iframe.src === 'about:blank' || iframe.src === window.location.href) {
+                            iframe.src = iframe.getAttribute('data-src');
+                        }
+                    } else { iframe.src = ''; }
+                }
+            });
+        }
+
+        window.unlockNextManual = function() {
+            const nextButton = document.getElementById('next-btn');
+            if(nextButton) nextButton.classList.add('pulsing');
+        };
+        
+        window.nextSlide = function() { if(currentSlide < slides.length - 1) { currentSlide++; update(); } };
+        window.prevSlide = function() { if(currentSlide > 0) { currentSlide--; update(); } };
+
+        window.saveName = () => {
+            const input = document.getElementById('s-name');
+            if(input && input.value.trim() !== '') studentName = input.value.trim();
+            document.querySelectorAll('.dyn-name').forEach(el => el.innerText = studentName);
+            window.nextSlide();
+        };
+
+        window.revealStarter = function(btn) {
+            btn.style.display = 'none';
+            const content = btn.nextElementSibling;
+            if(content && content.classList.contains('starter-content')) content.classList.add('active');
+        };
+
+        window.openVocab = function(word) {
+            const data = vocabData[word.toLowerCase()];
+            if(!data) return;
+
+            document.getElementById('d-word').innerText = data.word.toUpperCase();
+            document.getElementById('d-phonetic').innerText = data.phonetic;
+            document.getElementById('d-def').innerText = data.def;
+            document.getElementById('d-ex').innerText = `"${data.context}"`;
+            document.getElementById('d-speak').innerText = data.speak || '';
+            
+            const videoWrapper = document.getElementById('d-video-wrapper');
+            const iframe = document.getElementById('d-video');
+            if (data.vStart && data.vEnd) {
+                videoWrapper.style.display = 'block';
+                iframe.src = `https://www.youtube-nocookie.com/embed/_bZi-34IFxs?start=${data.vStart}&end=${data.vEnd}&autoplay=1&rel=0&modestbranding=1`;
+            } else {
+                videoWrapper.style.display = 'none';
+                iframe.src = '';
+            }
+
+            document.getElementById('dict-hub-container').style.display = 'block';
+            const mainContainer = document.getElementById('slides-container');
+            mainContainer.style.transform = 'scale(0.95) translateX(-2vw)';
+            document.getElementById('dict-panel').classList.add('right-open');
+        };
+
+        window.closeDict = () => {
+            document.getElementById('dict-panel').classList.remove('right-open');
+            document.getElementById('d-video').src = ''; 
+            document.getElementById('slides-container').style.transform = 'scale(1) translateX(0)';
+        }
+
+        window.openBox = (el, word, nextBtnId) => {
+            el.classList.add('opened');
+            window.openVocab(word);
+            if(nextBtnId) {
+                const btn = document.getElementById(nextBtnId);
+                if(btn) btn.style.display = 'inline-flex';
+            }
+        };
+
+        window.switchGrammar = function(btn, sentence, label, sentenceId, certaintyId) {
+            let siblings = btn.parentElement.children;
+            for(let s of siblings) s.classList.remove('active');
+            btn.classList.add('active');
+            
+            const words = sentence.split(' ');
+            let formatted = words.map(w => {
+                if(w.includes('CAN') || w.includes('KNOW')) return `<span style="color:var(--brand-main);">${w}</span>`;
+                return w;
+            }).join(' ');
+
+            document.getElementById(sentenceId).innerHTML = formatted;
+            document.getElementById(certaintyId).innerText = label;
+        }
+
+        // Skill Sorter (Weighing Scale)
+        const scaleWords = [
+            {w: 'PROGRAMMING', t: 'HARD'}, {w: 'LEADERSHIP', t: 'SOFT'}, 
+            {w: 'COMMUNICATION', t: 'SOFT'}, {w: 'TYPING FAST', t: 'HARD'}
+        ];
+        let currentScaleIndex = 0;
+        
+        window.weighItem = function(guessType) {
+            if(currentScaleIndex >= scaleWords.length) return;
+            const item = scaleWords[currentScaleIndex];
+            const display = document.getElementById('scale-display');
+            
+            if(guessType === item.t) {
+                const basket = document.getElementById(guessType === 'HARD' ? 'basket-hard' : 'basket-soft');
+                const chip = document.createElement('div');
+                chip.className = 'scale-item-chip';
+                chip.innerText = item.w;
+                basket.appendChild(chip);
+                
+                currentScaleIndex++;
+                if(currentScaleIndex < scaleWords.length) {
+                    display.innerText = scaleWords[currentScaleIndex].w;
+                } else {
+                    display.innerText = "DONE!";
+                    display.style.color = "var(--correct)";
+                    document.getElementById('hub-scale').style.display = 'block';
+                    window.unlockNextManual();
+                }
+            } else {
+                display.style.color = "var(--incorrect)";
+                display.style.animation = 'shake 0.4s';
+                setTimeout(() => { display.style.color = "var(--brand-main)"; display.style.animation = ''; }, 400);
+            }
+        };
+
+        // NEW: Soft Skills Superpower Quiz
+        window.answerSq = function(type, step) {
+            sqScore[type]++;
+            document.getElementById('sq-' + step).classList.remove('active');
+            const nextStep = document.getElementById('sq-' + (step + 1));
+            if (nextStep) {
+                nextStep.classList.add('active');
+            } else {
+                document.getElementById('sq-result').style.display = 'block';
+                const title = document.getElementById('sq-title');
+                const desc = document.getElementById('sq-desc');
+                const icon = document.getElementById('sq-icon');
+                const followup = document.getElementById('sq-followup-phrase');
+                
+                let maxSkill = Object.keys(sqScore).reduce((a, b) => sqScore[a] > sqScore[b] ? a : b);
+
+                if (maxSkill === 'empathy') {
+                    title.innerText = "EMPATHY MASTER";
+                    desc.innerText = "You understand people's feelings and build great relationships!";
+                    icon.className = "fa-solid fa-heart";
+                    followup.innerText = "\"Can you tell me about a time you helped a coworker?\"";
+                } else if (maxSkill === 'problem') {
+                    title.innerText = "PROBLEM SOLVER";
+                    desc.innerText = "You think fast and always find a logical solution!";
+                    icon.className = "fa-solid fa-puzzle-piece";
+                    followup.innerText = "\"Can you describe a difficult problem you solved?\"";
+                } else {
+                    title.innerText = "MASTER COMMUNICATOR";
+                    desc.innerText = "You express ideas clearly and connect with everyone!";
+                    icon.className = "fa-solid fa-comments";
+                    followup.innerText = "\"How do you usually communicate ideas to your team?\"";
+                }
+                
+                document.getElementById('sq-followup-hub').style.display = 'block';
+                window.unlockNextManual();
+            }
+        }
+
+        /* --- SYNTAX BUILDER --- */
+        window.buildState = {};
+        window.moveWord = function(chip, dzId, targetArrayStr) {
+            if(chip.classList.contains('used')) return;
+            const targetArray = targetArrayStr.split(',');
+            const word = chip.innerText;
+            const dz = document.getElementById(dzId);
+            const newChip = document.createElement('div');
+            newChip.className = 'word-chip'; 
+            newChip.style.background = 'var(--brand-main)';
+            newChip.style.color = '#fff';
+            newChip.innerText = word;
+            if (!chip.id) chip.id = 'chip_' + Math.random().toString(36).substr(2, 9);
+            newChip.dataset.sourceId = chip.id;
+            
+            newChip.onclick = function() {
+                if(dz.classList.contains('success')) return;
+                dz.removeChild(this); document.getElementById(this.dataset.sourceId).classList.remove('used');
+                const idx = window.buildState[dzId].lastIndexOf(this.innerText);
+                if(idx !== -1) window.buildState[dzId].splice(idx, 1);
+            };
+            
+            dz.appendChild(newChip); chip.classList.add('used');
+            if(!window.buildState[dzId]) window.buildState[dzId] = [];
+            window.buildState[dzId].push(word);
+
+            if(window.buildState[dzId].length === targetArray.length) {
+                if(JSON.stringify(window.buildState[dzId]) === JSON.stringify(targetArray)) {
+                    dz.classList.add('success'); 
+                    Array.from(dz.children).forEach(c => { c.style.background = 'var(--correct)'; c.style.color = '#000'; c.style.cursor = 'default'; });
+                    document.getElementById('hub-syn').style.display = 'block';
+                    window.unlockNextManual();
+                } else {
+                    dz.style.borderColor = 'var(--incorrect)'; dz.style.animation = 'shake 0.4s';
+                    setTimeout(() => { dz.innerHTML = ''; dz.style.borderColor = 'rgba(255,255,255,0.2)'; dz.style.animation = ''; window.buildState[dzId] = []; chip.parentElement.querySelectorAll('.word-chip').forEach(c => c.classList.remove('used')); }, 1000);
+                }
+            }
+        }
+
+        /* --- PHONE SIMULATOR --- */
+        window.advanceChat = function(btn, isCorrect, optsId, dotId, promptId) {
+            if(!isCorrect) {
+                btn.style.backgroundColor = 'var(--incorrect)'; btn.style.borderColor = 'var(--incorrect)'; btn.style.animation = 'shake 0.4s';
+                setTimeout(() => { btn.style.backgroundColor = 'rgba(30, 41, 59, 0.8)'; btn.style.borderColor = 'rgba(255,255,255,0.1)'; btn.style.animation = ''; }, 800);
+                return;
+            }
+            const text = btn.innerText;
+            const optsContainer = document.getElementById(optsId);
+            const chatArea = optsContainer.previousElementSibling;
+            optsContainer.innerHTML = '';
+            
+            const sentMsg = document.createElement('div');
+            sentMsg.className = 'phone-msg sent';
+            sentMsg.style.display = 'block';
+            sentMsg.innerText = text;
+            
+            const typingDot = document.getElementById(dotId);
+            if(typingDot) { chatArea.insertBefore(sentMsg, typingDot); typingDot.style.display = 'none'; } else { chatArea.appendChild(sentMsg); }
+            chatArea.scrollTop = chatArea.scrollHeight;
+            if(promptId) setTimeout(() => { document.getElementById(promptId).style.display = 'block'; window.unlockNextManual(); }, 500); 
+        };
+
+        /* --- ODD ONE OUT --- */
+        window.checkOddOne = function(btn, isCorrect) {
+            if(btn.parentElement.classList.contains('solved')) return;
+
+            if(isCorrect) {
+                btn.classList.add('correct');
+                btn.parentElement.classList.add('solved');
+                
+                Array.from(btn.parentElement.children).forEach(child => {
+                    if(child !== btn) child.classList.add('dimmed');
+                });
+
+                document.getElementById('p_odd').style.display = 'block';
+                window.unlockNextManual();
+            } else {
+                btn.classList.add('wrong');
+                setTimeout(() => btn.classList.remove('wrong'), 400);
+            }
+        }
+
+        /* --- ACTION SPINNER --- */
+        window.spinSlot = function() {
+            const scenarios = ["LATE FOR WORK", "LOST IMPORTANT FILE", "ANGRY BOSS", "TEAM CONFLICT", "MISSED DEADLINE"];
+            const display = document.getElementById('slot-display');
+            let count = 0;
+            const btn = event.target;
+            btn.disabled = true;
+            display.style.color = "#fff";
+            display.style.transform = "scale(1)";
+
+            const interval = setInterval(() => {
+                display.innerText = scenarios[Math.floor(Math.random() * scenarios.length)];
+                count++;
+                if(count > 20) {
+                    clearInterval(interval);
+                    display.style.color = "var(--brand-main)";
+                    display.style.transform = "scale(1.1)";
+                    document.getElementById('p_slot').style.display = 'block';
+                    btn.disabled = false;
+                    window.unlockNextManual();
+                }
+            }, 100);
+        }
+
+        /* --- PICTURE REVEAL --- */
+        let tilesRemoved = 0;
+        window.removeTile = function(tile) {
+            if(tile.style.opacity === '0') return;
+            tile.style.opacity = '0';
+            tile.style.pointerEvents = 'none'; 
+            tilesRemoved++;
+            if(tilesRemoved >= 9) {
+                document.getElementById('p_reveal').style.display = 'block';
+                window.unlockNextManual();
+            }
+        }
+
+        window.checkTruth = function(btn, rowId, isTrueBtn, expectedTrue) {
+            const row = document.getElementById(rowId);
+            if(row.classList.contains('solved-true') || row.classList.contains('solved-false')) return;
+            if(isTrueBtn === expectedTrue) {
+                row.classList.add(isTrueBtn ? 'solved-true' : 'solved-false');
+            } else {
+                row.style.animation = 'shake 0.4s';
+                setTimeout(() => row.style.animation = '', 400);
+            }
+        }
+
+        window.flipTopic = function(card, topicText, starterText) {
+            if(card.classList.contains('flipped')) return;
+            card.querySelector('.t-back').innerText = topicText;
+            card.classList.add('flipped');
+            document.getElementById('cards-starter-phrase').innerText = `"${starterText}"`;
+            setTimeout(() => { 
+                document.getElementById('p_cards').style.display = 'block'; 
+                window.unlockNextManual();
+            }, 600);
+        }
+
+        window.selectWyr = function(card) {
+            const container = card.parentElement;
+            if(container.classList.contains('locked')) return;
+
+            card.classList.add('selected');
+            container.classList.add('locked');
+            
+            document.getElementById('hub-wyr').style.display = 'block';
+            window.unlockNextManual();
+        }
+
+        window.selectAgree = function(btn) {
+            const container = document.getElementById('agree-box');
+            if(container.classList.contains('locked')) return;
+
+            btn.classList.add('selected');
+            container.classList.add('locked');
+            
+            document.getElementById('hub-agree').style.display = 'block';
+            window.unlockNextManual();
+        }
+
+        window.spinCategory = function(btn) {
+            const categories = ["HARD SKILLS", "SOFT SKILLS", "JOB TITLES", "OFFICE ITEMS"];
+            const display = document.getElementById('category-display');
+            let count = 0;
+            btn.style.display = 'none';
+            display.style.color = "#fff";
+            display.style.transform = "scale(1)";
+
+            const interval = setInterval(() => {
+                display.innerText = categories[Math.floor(Math.random() * categories.length)];
+                count++;
+                if(count > 15) {
+                    clearInterval(interval);
+                    display.style.color = "var(--brand-main)";
+                    display.style.transform = "scale(1.1)";
+                    document.getElementById('n3-checks').style.display = 'flex';
+                    document.getElementById('hub-n3').style.display = 'block';
+                }
+            }, 100);
+        }
+
+        let n3CheckedCount = 0;
+        window.checkN3 = function(circle) {
+            if(circle.classList.contains('filled')) return;
+            circle.classList.add('filled');
+            circle.innerHTML = '<i class="fa-solid fa-check"></i>';
+            n3CheckedCount++;
+            if(n3CheckedCount === 3) {
+                window.unlockNextManual();
+            }
+        }
+
+        window.showHub = (id) => { const hub = document.getElementById(id); if (hub) hub.style.display = 'block'; };
+        
+        let hudTimerInt; let hudTime = 60;
+        window.startTimer = function() {
+            clearInterval(hudTimerInt); hudTime = 60;
+            const tEl = document.getElementById('hud-timer');
+            tEl.innerText = "00:60"; tEl.style.color = "var(--brand-main)";
+            hudTimerInt = setInterval(() => {
+                hudTime--; tEl.innerText = `00:${hudTime < 10 ? '0'+hudTime : hudTime}`;
+                if(hudTime <= 10) tEl.style.color = "var(--incorrect)";
+                if(hudTime <= 0) clearInterval(hudTimerInt);
+            }, 1000);
+        };
+        window.toggleCorrectionMode = function() { document.body.classList.toggle('correction-mode'); };
+        window.showAlert = function(msg, type) {
+            const overlay = document.getElementById('alert-screen');
+            const textEl = document.getElementById('alert-msg');
+            textEl.innerHTML = msg; textEl.className = 'alert-text alert-' + type;
+            overlay.classList.add('show');
+            setTimeout(() => { overlay.classList.remove('show'); }, 2500);
+        };
+        let starCount = 0;
+        window.awardStar = function() { starCount++; document.getElementById('hud-stars').innerText = '⭐ ' + starCount; showAlert('⭐<br>+1 POINT!', 'star'); };
+
+        window.toggleSidebar = function(id) {
+            let el = document.getElementById(id);
+            if (!el) return;
+            const mainContainer = document.getElementById('slides-container');
+            if(el.classList.contains('open') || el.classList.contains('right-open')) {
+                el.classList.remove('open', 'right-open');
+                mainContainer.style.transform = 'scale(1) translateX(0)';
+            } else {
+                document.querySelectorAll('.sidebar-panel, .teacher-hud').forEach(p => p.classList.remove('open', 'right-open'));
+                el.classList.add(id === 'vocab-panel' || id === 'dict-panel' ? 'right-open' : 'open');
+                mainContainer.style.transform = 'scale(0.95) translateX(-2vw)';
+            }
+        };
+
+        window.toggleFullscreen = function() { try { if (!document.fullscreenElement) { document.documentElement.requestFullscreen().catch(()=>{}); } else { document.exitFullscreen(); } } catch (err) {} }
+
+        window.onload = () => { update(); };
+    </script>
+</body>
+</html>
